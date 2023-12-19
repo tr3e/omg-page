@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="OMG: Towards Open-vocabulary Motion Generation via Mixture of Controllers">
+  <meta name="keywords" content="MoGen, interaction, diffusion">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8">
+  <title>OMG: Towards Open-vocabulary Motion Generation via Mixture of Controllers</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title" style="font-size:40px">OMG: Towards Open-vocabulary Motion Generation via Mixture of Controllers</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=V8dsEp8AAAAJ">Han Liang</a>¹,</span>
+            <span class="author-block">
+              <a>Jiacheng Bao</a>¹,</span>
+            <span class="author-block">
+              <a>Ruichi Zhang</a>¹,
+            </span>
+            <span class="author-block">
+              <a>Sihan Ren</a>¹,
+            </span>
+            <span class="author-block">
+              <a>Yuecheng Xu</a>¹,
+            </span>
+            <br/>
+            <span class="author-block">
+              <a>Sibei Yang</a>¹,
+            </span>
+            <span class="author-block">
+              <a>Xin Chen</a>²,
+            </span>
+            <span class="author-block">
+              <a href="http://www.yu-jingyi.com/">Jingyi Yu</a>¹,
+            </span>
+            <span class="author-block">
+              <a href="http://xu-lan.com/">Lan Xu</a>¹
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">¹ ShanghaiTech University &nbsp;&nbsp;&nbsp;² Tencent PCG</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2312.08985.pdf"
+                   class="external-link button is-normal is-rounded is-dark" >
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=1M4c2eZFTk0&t=181s"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- arxiv -->
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2312.08985"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href=""
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code (Coming soon)</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <!-- <span class="link-block">
+                <a href="https://drive.google.com/drive/folders/1oyozJ4E7Sqgsr7Q747Na35tWo5CjNYk3?usp=sharing"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span>Data (released)</span>
+                  </a>
+                </span> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- <section class="hero teaser">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <video id="teaser" autoplay muted loop playsinline height="100%">
+        <source src="./static/images/teaser.gif"
+                type="video/mp4">
+      </video>
+      <h2 class="subtitle has-text-centered">
+        <span class="dnerf">Nerfies</span> One man knocked the other down with a thumping leg
+      </h2>
+    </div>
+  </div>
+</section> -->
+
+<center>
+  <img src="./static/images/teaser.jpg" alt="Image" width="33%"/>
+</center>
+<br/>
+<section class="hero is-light is-small">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3"><br/>Abstract</h2>
+        <div class="content has-text-justified">
+          <p>We have recently seen tremendous progress in realistic text-to-motion generation. Yet, the existing methods often fail or produce implausible motions with unseen text inputs, which limits the applications.</p>
+          <p>In this paper, we present OMG, a novel framework, which enables compelling motion generation from zero-shot open-vocabulary text prompts. Our key idea is to carefully tailor the pretrain-then-finetune paradigm into the text-to-motion generation.</p>
+          <p>At the pre-training stage, our model improves the generation ability by learning the rich out-of-domain inherent motion traits. To this end, we scale up a large unconditional diffusion model up to 1B parameters, so as to utilize the massive unlabeled motion data up to over 20M motion instances.</p>
+          <p>At the subsequent fine-tuning stage, we introduce motion ControlNet, which incorporates text prompts as conditioning information, through a trainable copy of the pre-trained model and the proposed novel Mixture-of-Controllers (MoC) block.
+            MoC block adaptively recognizes various ranges of the sub-motions with a cross-attention mechanism and processes them separately with the text-token-specific experts. Such a design effectively aligns the CLIP token embeddings of text prompts to various ranges of compact and expressive motion features.</p>
+          <p>Extensive experiments demonstrate that our OMG achieves significant improvements over the state-of-the-art methods on zero-shot text-to-motion generation.</p>
+          <br/>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+    <!-- Paper video.
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/MrKrnHhk8IA?rel=0&amp;showinfo=0"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div> -->
+    <!--/ Paper video. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Video -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Video</h2>
+      </div>
+    </div>
+    <!-- YouTube 视频 -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="publication-video">
+          <iframe src="https://www.youtube.com/embed/1M4c2eZFTk0?rel=0&amp;showinfo=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+    <!--/ YouTube 视频 -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Methods</h2>
+      </div>
+    </div>
+
+    <div class="hero teaser">
+      <div class="hero-body">
+        <center><img id="teaser" width="120%" src="./static/images/overview.jpg" margin: 0 auto;></center>
+      </div>
+    </div>
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <div class="content has-text-justified">
+          <p>
+            We train our OMG model in two stages. First, we leverage large-scale unlabeled motion data to pretrain an unconditional diffusion model with up to 1B parameters.
+             Then, we adopt a conditional fine-tuning scheme called motion
+            ControlNet to condition the pre-trained diffusion model on text prompts. During inference, the pre-trained unconditional denoiser
+            and the fine-tuned conditional denoiser are combined with classifier-free guidance, generating realistic motions with zero-shot text inputs.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="hero is-light is-small">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-four-fifths">
+      <h2 class="title is-3"><br/>Qualitative results</h2>
+    </div>
+  </div>
+  <div class="container is-max-desktop">
+    <div class="content has-text-justified">
+      <br/> 
+      We show qualitative results generated by our model given various text prompts. Our model effectively captures the motion characteristics from either a single phrase or longer natural sentences.
+      <br/>
+    </div>
+  </div>
+</section>
+
+
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results1.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results2.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results3.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results4.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results5.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results6.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results7.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results8.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="video-container">
+            <video poster="" autoplay muted loop playsinline>
+              <source src="./static/videos/results9.mp4" type="video/mp4">
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Comparisons -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Comparisons</h2>
+      </div>
+    </div>
+  </div>
+  <div class="container is-max-desktop">
+    <div class="content has-text-justified">
+      <br/> 
+      We show qualitative comparisons with previous state-of-the-art methods. Our model demonstrates the capability to generate motions that show more realism, and better alignment with each motion characteristic description, whether in the sentence or phrase
+      <br/>
+    </div>
+  </div>
+
+  <br/>
+  <div class="container is-max-desktop">
+    <h2 class="subtitle has-text-centered">
+      <span class="prompt">"Gollum jumps forward"
+    </h2>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="video-container">
+          <video autoplay muted loop  height="150%">
+            <source src="./static/videos/comp/comp_gollum1.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="video-container">
+          <video autoplay muted loop  height="150%">
+            <source src="./static/videos/comp/comp_gollum2.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <h2 class="subtitle has-text-centered">
+      <span class="prompt">"Spinkick with taekwondo skills"
+    </h2>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="video-container">
+          <video autoplay muted loop  height="150%">
+            <source src="./static/videos/comp/comp_spinkick2.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="video-container">
+          <video autoplay muted loop  height="150%">
+            <source src="./static/videos/comp/comp_spinkick1.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <h2 class="subtitle has-text-centered">
+      <span class="prompt">"snatch workout"
+    </h2>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="video-container">
+          <video autoplay muted loop  height="150%">
+            <source src="./static/videos/comp/comp_snatch2.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <div class="column is-half">
+        <div class="video-container">
+          <video autoplay muted loop  height="150%">
+            <source src="./static/videos/comp/comp_snatch1.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+
+
+
+
+<section class="hero is-light is-small">
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-four-fifths">
+      <h2 class="title is-3"><br/>More results</h2>
+    </div>
+  </div>
+
+</section>
+
+
+
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container">
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay muted loop playsinline height="100%">
+            <source src="./static/videos/more_res/序列 06_Sub_01.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="1" autoplay   muted loop playsinline height="100%">
+            <source src="./static/videos/more_res/序列 06_Sub_02.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-shiba">
+          <video poster="" id="shiba" autoplay   muted loop playsinline height="100%">
+            <source src="./static/videos/more_res/序列 06_Sub_03.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-steve">
+          <video poster="" id="steve" autoplay   muted loop playsinline height="100%">
+            <source src="./static/videos/more_res/序列 06_Sub_04.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-chair-tp">
+          <video poster="" id="1" autoplay   muted loop playsinline height="100%">
+            <source src="./static/videos/more_res/序列 06_Sub_05.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_06.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_07.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_08.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_09.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_10.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_11.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_12.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_13.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_14.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_15.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video  autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_16.mp4"
+            type="video/mp4">
+          </video>
+        </div>
+      </div>
+      
+      <br/>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_17.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_18.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_19.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_20.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_21.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_22.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_23.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_24.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_25.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_26.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_27.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_28.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_29.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_30.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_31.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_32.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+      <br/>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_33.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_34.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_35.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_36.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_37.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_38.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_39.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_40.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_41.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_42.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_43.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_44.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_45.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay   muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_46.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="item">
+          <video autoplay  muted loop height="100%">
+            <!-- Your video file here -->
+            <source src="./static/videos/more_res/序列 06_Sub_47.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{liang2023intergen,
+      title={InterGen: Diffusion-based Multi-human Motion Generation under Complex Interactions},
+      author={Liang, Han and Zhang, Wenqian and Li, Wenxuan and Yu, Jingyi and Xu, Lan},
+      journal={arXiv preprint arXiv:2304.05684},
+      year={2023}
+    }</code></pre>
+  </div>
+</section> -->
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/pdf/OMG.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      <!-- <a class="icon-link" href="https://github.com/tr3e" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a> -->
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
